@@ -42,6 +42,7 @@ Plug 'jaawerth/fennel-vim'
 ```
 
 ## Todo
+- [ ] Support a `fnl/` equivalent to the `lua/` dirs in runtime path, allowing autorunning of `fnl/init.fnl`
 - [ ] Implement a function e.g. `FennelInvoke` for invoking a function from a module
 - [ ] Explore other ways to include fennel than directly (maybe wrap luarocks?). May require tinkering with `LUA_PATH` or `package.path`
 - [ ] Try and get the `Fnl` command working with heredoc syntax the same way `lua` command does
