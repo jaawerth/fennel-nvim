@@ -5,6 +5,10 @@
 I will likely extend this in the future but for now I'm just testing out the idea!
 
 ## Usage
+
+The following allows you to run fennel code via lua in neovim.
+For the lua API to manipulate neovim from lua/fennel, see `:help lua-vim`, `:help lua`, and `:help api`.
+
 ### Evaluate fennel:
 
 ```viml
