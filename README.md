@@ -35,7 +35,7 @@ fennel modules directly from lua.
 
 ## Install
 
-The usual, either copy to your nvim config dir or use vim-plug ala
+The usual, either copy to your nvim config dir or use vim-plug or your plugin manager of choice e.g.
 
 ```viml
 Plug 'jaawerth/fennel-vim'
