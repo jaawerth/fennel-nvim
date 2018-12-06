@@ -40,3 +40,8 @@ The usual, either copy to your nvim config dir or use vim-plug or your plugin ma
 ```viml
 Plug 'jaawerth/fennel-vim'
 ```
+
+## Todo
+- [ ] Implement a function e.g. `FennelInvoke` for invoking a function from a module
+- [ ] Explore other ways to include fennel than directly (maybe wrap luarocks?). May require tinkering with `LUA_PATH` or `package.path`
+- [ ] Try and get the `Fnl` command working with heredoc syntax the same way `lua` command does
