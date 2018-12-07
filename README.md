@@ -1,8 +1,8 @@
 # fennel-nvim [WIP]
 
-**Experimental** plugin allowing native execution of fennel code via neovim's native lua support
+**Experimental** plugin adding native [fennel](https://fennel-lang.org) support to nvim by utilizing neovim's native lua support. No RPC necessary!
 
-I will likely extend this in the future but for now I'm just testing out the idea!
+I will likely extend this in the future, but for now I'm just testing out the idea. It should be possible reach seamless integration with a little extra work.
 
 ## Usage
 
@@ -44,5 +44,6 @@ Plug 'jaawerth/fennel-vim'
 ## Todo
 - [ ] Support a `fnl/` equivalent to the `lua/` dirs in runtime path, allowing autorunning of `fnl/init.fnl`
 - [ ] Implement a function e.g. `FennelInvoke` for invoking a function from a module
-- [ ] Explore other ways to include fennel than directly (maybe wrap luarocks?). May require tinkering with `LUA_PATH` or `package.path`
-- [ ] Try and get the `Fnl` command working with heredoc syntax the same way `lua` command does
+- [ ] Explore other ways to include fennel than directly (maybe wrap luarocks?).
+- [ ] Allow users to supply their own fennel version.
+- [ ] Allow `Fnl` to support heredoc syntax for parity with nvim's `lua` command.
