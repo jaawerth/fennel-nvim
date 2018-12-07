@@ -1,3 +1,5 @@
+lua require("patch_searcher")()
+
 function! FennelEval(code, ...)
   let l:code = substitute(a:code, '"', '\\"', "g")
   let l:toeval = 'require("fennel").eval("' . l:code . '")'
