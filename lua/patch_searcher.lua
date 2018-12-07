@@ -8,9 +8,6 @@ function patch_searchers()
   if not found then
     table.insert(package.loaders or package.searchers, fnl.searcher)
   end
-  for i, v in ipairs(package.loaders or package.searchers) do
-    print("searcher is fnl.searcher", fnl.searcher == v)
-  end
 end
 
 return patch_searchers
