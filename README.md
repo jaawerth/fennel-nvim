@@ -62,5 +62,5 @@ local compiledLua = fnl.compile('path/to/file.fnl')
 The usual, either copy to your nvim config dir or use vim-plug or your plugin manager of choice e.g.
 
 ```viml
-Plug 'jaawerth/fennel-vim'
+Plug 'jaawerth/fennel-nvim'
 ```
