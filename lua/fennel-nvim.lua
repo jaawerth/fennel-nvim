@@ -43,10 +43,10 @@ return {
   patch_searchers = function()
     local found = false
     for i, v in ipairs(package.loaders or package.searchers) do
-      if v == fnl.searcher then found = true end
+      if v == fennel.searcher then found = true end
     end
     if not found then
-      table.insert(package.loaders or package.searchers, fnl.searcher)
+      table.insert(package.loaders or package.searchers, fennel.searcher)
     end
   end
 }
