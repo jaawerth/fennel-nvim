@@ -12,5 +12,9 @@ function! fnl#dofile(file, ...)
   return luaeval('require("fennel-nvim").dofile(_A.file, _A.opts)', opts)
 endfunction
 
+function! fnl#version()
+  return luaeval('require("fennel-nvim").version')
+endfunction
+
 command! -nargs=1 Fnl call fnl#eval(<f-args>)
 command! -nargs=1 -complete=file FnlFile call fnl#dofile(<f-args>)

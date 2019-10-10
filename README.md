@@ -4,6 +4,13 @@
 
 I will likely extend this in the future, but for now I'm just testing out the idea. It should be possible reach seamless integration with a little extra work.
 
+Currently bundled with Fennel `0.4.0-dev`, from the current master branch as of
+[this commit](https://github.com/bakpakin/Fennel/tree/d3620b369a6d16f55f98d939a3b47b56d97b9f19).
+
+This is basically just `0.3.0` with an extra docstring or two and better readline completion from the repl
+(which requires `readline.lua` to be installed and present on package.path).
+In the future, I will switch this over to only bundling a full release, and allowing an option to easily supply a custom version.
+
 ## Usage
 
 The following allows you to run fennel code via lua in neovim.
