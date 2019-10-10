@@ -21,7 +21,7 @@ local defaults = {
 
 return {
   version = fennel.version,
-  defaultOptions = defaults,
+  defaults = defaults,
 
   -- main api functions
   compile = function(file, opts)
