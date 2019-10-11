@@ -46,7 +46,7 @@ local module = {
   -- to make require() from lua also search for fennel modules
   patchSearchers = function()
     local found = false
-    for i, v in ipairs(package.loaders or package.searchers) do
+    for _, v in ipairs(package.loaders or package.searchers) do
       if v == fennel.searcher then found = true end
     end
     if not found then
