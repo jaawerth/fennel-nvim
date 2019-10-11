@@ -18,6 +18,7 @@ local defaults = {
   eval = { useMetadata = true, env = env, allowedGlobals = false },
   dofile = { useMetadata = true, env = env, allowedGlobals = false },
 }
+
 local _updateFennelPaths
 local module = {
   version = fennel.version,
@@ -52,14 +53,26 @@ local module = {
       table.insert(package.loaders or package.searchers, fennel.searcher)
     end
   end,
-  syncFennelPaths = true,
+  autoInit = function(val)
+    if val then
+      vim.api.nvim_set_var('fennel_nvim_auto_init', val)
+      return val
+    else
+      local ok, ret = pcall(vim.api.nvim_get_var, 'fennel_nvim_auto_init')
+      if ok then return ret else return nil end
+    end
+  end,
+  syncFennelPath = true,
 }
+local originalFennelPath = fennel.path
+module.resetFennelPath = function()
+  fennel.path = originalFennelPath
+end
 
 local prevPkgPath
 local prevPkgPathSet = {}
-module.origFennelPath = fennel.path
 _updateFennelPaths = function()
-  if not module.syncFennelPaths or prevPkgPath == package.path then
+  if not module.syncFennelPath or prevPkgPath == package.path then
       return nil
   end
   local new, newPkgPathSet = {}, {}
