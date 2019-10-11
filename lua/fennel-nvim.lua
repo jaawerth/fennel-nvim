@@ -46,6 +46,12 @@ local function fnlDoFile(file, opts)
   _updateFennelPaths()
   return fennel.dofile(file, inherit(opts or {}, defaults.dofile))
 end
+local function fnlDo(expr, s, e)
+  local code = string.format('(fn [line linenr] %s)', expr)
+  local func = fnlEval(code)
+  local lines = vim.api.nvim_buf_get_lines('.', s, e, true)
+  for i, l in ipairs(lines) do func(l, i) end
+end
 
 local module = {
   version = fennel.version,
@@ -56,6 +62,7 @@ local module = {
   eval = fnlEval,
   vimeval = vimWrap(fnlEval), -- version with returns safe for viml interop
   dofile = fnlDoFile,
+  dolines = fnlDo,
   vimdofile = vimWrap(fnlDoFile), -- version with returns safe for viml interop
   compile = function(file, opts)
     _updateFennelPaths()

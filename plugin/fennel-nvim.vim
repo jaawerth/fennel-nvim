@@ -1,5 +1,6 @@
 command! -nargs=1 Fnl call fnl#eval(<f-args>)
 command! -nargs=1 -complete=file FnlFile call fnl#dofile(<f-args>)
+command! -nargs=1 -range=% FnlDo <line1>,<line2>call fnl#do(<f-args>)
 
 if !exists('g:fennel_nvim_auto_init')
   let g:fennel_nvim_auto_init = v:true
