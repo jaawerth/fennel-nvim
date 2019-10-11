@@ -62,18 +62,17 @@ require('fennel-nvim').autoInit() -- get value
 
 ### Commands
 
-Using the `:Fnl` command:
+#### Eval some Fennel: `Fnl`
 
 ```viml
-" via Fnl command
 :Fnl (doc doc)
 " Output:
 " (doc x)
 "   Print the docstring and arglist for a function, macro, or special form.
 ```
 
-**Note:** Unlike `:lua`, will not work with heredoc (`<<`) syntax, as that is only available to built-in
-commands. This behavior may become available in the future when neovim implements `:here`
+**Note:** Unlike `:lua`, this will not work with heredoc (`<<`) syntax, as that is only available
+to built-in commands. This behavior may become available in the future when neovim implements `:here`
 (per [this issue](https://github.com/neovim/neovim/issues/7638)).
 
 Using the `fnl#eval(code[, arg][, compileOpts])` function - like `luaeval()`, you can pass an argument,
@@ -84,8 +83,9 @@ which will be bound to the magic global `_A` in the running environment.
 " outputs: Hello, World!
 ```
 
-### Run a file
-With `:FnlFile path/to/file.fnl`
+#### Run a file: `FnlFile`
+
+With `:FnlFile path/to/file.fnl` or simply use `FnlFile` to source `.fnl` files from `init.vim`
 
 For example, if editing some fennel code you want to test in neovim itself,
 ```viml
@@ -93,6 +93,22 @@ For example, if editing some fennel code you want to test in neovim itself,
 ```
 
 Similarly, you can use `fnl#eval(filepath[, compileOpts])`.
+
+#### Execute Fennel on a range of lines: `FnlDo`
+
+Fennel analog to `luado` (see `:help luado`). Select/enter a range of lines (defaults to every line in the buffer)
+and the expressions you give it will be wrapped in a function, which is executed for every line, with `line, linenr` passed
+as named arguments.
+
+```viml
+" print first 5 lines preceded by line #
+:1,5FnlDo (print linenr line)
+" print the width of every line in file
+:FnlDo (print (string.format "line %d is %d chars wide" linenr (# line)))
+```
+Can be invoked as a range function with `<range>call fnl#do(exprStr)` (see `:help call`).
+
+Also available from Lua: `require('fennel-nvim').dolines(exprStr, firstline, lastline)`
 
 ## Configuration and usage from Lua
 

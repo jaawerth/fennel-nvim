@@ -50,7 +50,7 @@ local function fnlDo(expr, s, e)
   local code = string.format('(fn [line linenr] %s)', expr)
   local func = fnlEval(code)
   local lines = vim.api.nvim_buf_get_lines('.', s, e, true)
-  for i, l in ipairs(lines) do func(l, i) end
+  for i, l in ipairs(lines) do func(l, i + s) end
 end
 
 local module = {
