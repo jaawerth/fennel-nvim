@@ -19,28 +19,47 @@ local defaults = {
   dofile = { useMetadata = true, env = env, allowedGlobals = false },
 }
 
+-- wrap a function to make it safe for viml interop
+local function vimWrap(func)
+  return function(...)
+    local ret = func(...)
+    local retType = type(ret)
+    if retType == "function" then
+      return nil
+    elseif retType == "table" then
+      local mt = getmetatable(ret) or {}
+      if mt.__call then return nil else return ret end
+    else
+      return ret
+    end
+  end
+end
+
 local _updateFennelPaths
+local function fnlEval(code, args, options)
+  _updateFennelPaths()
+  local opts = inherit(options or {}, defaults.eval)
+  opts.env._A = args
+  return fennel.eval(code, opts)
+end
+local function fnlDoFile(file, opts)
+  _updateFennelPaths()
+  return fennel.dofile(file, inherit(opts or {}, defaults.dofile))
+end
+
 local module = {
   version = fennel.version,
   defaults = defaults,
   inherit = inherit,
 
   -- main api functions
+  eval = fnlEval,
+  vimeval = vimWrap(fnlEval), -- version with returns safe for viml interop
+  dofile = fnlDoFile,
+  vimdofile = vimWrap(fnlDoFile), -- version with returns safe for viml interop
   compile = function(file, opts)
     _updateFennelPaths()
     return fennel.compile(file, inherit(opts or {}, defaults.compile))
-  end,
-
-  eval = function(code, args, options)
-    _updateFennelPaths()
-    local opts = inherit(options or {}, defaults.eval)
-    opts.env._A = args
-    return fennel.eval(code, opts)
-  end,
-
-  dofile = function(file, opts)
-    _updateFennelPaths()
-    return fennel.dofile(file, inherit(opts or {}, defaults.dofile))
   end,
 
   -- to make require() from lua also search for fennel modules
