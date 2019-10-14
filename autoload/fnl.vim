@@ -1,3 +1,7 @@
+if exists('g:fennel_nvim_init_patch_searchers') && g:fennel_nvim_init_patch_searchers
+  lua require('fennel-nvim').patchSearchers()
+endif
+
 function! fnl#eval(code, ...)
   let l:args = {
         \ 'args': a:0 > 0 ? a:1 : v:null,
