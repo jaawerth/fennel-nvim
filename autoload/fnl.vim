@@ -1,4 +1,4 @@
-if exists('g:fennel_nvim_init_patch_searchers') && g:fennel_nvim_init_patch_searchers
+if !exists('g:fennel_nvim_init_patch_searchers') || g:fennel_nvim_init_patch_searchers
   lua require('fennel-nvim').patchSearchers()
 endif
 
