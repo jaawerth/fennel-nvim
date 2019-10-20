@@ -58,7 +58,7 @@ SETTINGS 						*fennel-variables*
 	If set to false, will prevent fennel-nvim from auto-sourcing
 	`init.fnl`. See |fennel-init|.
 
-*g:fennel_nvim_init_patch_searchers*
+*g:fennel_nvim_patch_searchers*
 	When set to true, `fennel.searcher` will be added to `package.loaders`
 	in neovim's luajit environment (see |lua-require|). This will allow
 	calls to `require` from Lua to also load and run any available Fennel
