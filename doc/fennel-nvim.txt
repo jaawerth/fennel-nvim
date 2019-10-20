@@ -1,0 +1,75 @@
+*fennel-nvim.txt* scripting neovim natively with *fennel*
+
+CONTENTS						*fennel-nvim-contents*
+
+Fennel Runtime ............................. |fennel-version|
+Usage from Neovim .......................... |fennel-usage|
+  Commands ................................. |fennel-commands|
+  init.fnl ................................. |fennel-init|
+  fennel.path,package.path,runtimepath ..... |fennel-paths|
+  Configuration ............................ |fennel-config|
+Scripting
+
+--------------------------------------------------------------------------------
+
+FENNEL RUNTIME						*fennel-version*
+	This plugin is currently running fennel `0.4.0-dev`, in a state
+	currently only slightly ahead of 0.3.0. It should be identical to
+	fennel 0.3.0 with the exception of a couple of minor bugfixes.
+
+
+--------------------------------------------------------------------------------
+
+USAGE							*fennel-usage*
+
+COMMANDS						*fennel-commands*
+
+:[range]Fnl {chunk}					*:Fnl*
+
+	Analog of `:lua`. Execute Fennel chunk. Range is allowed, but ignored.
+	Return values that can't exist in viml will be replaced with `nil`.
+
+:[range]FnlFile {file}					*:FnlFile*
+
+	Analog of `:luafile`. Execute script {file} in Fennel. File arg is required. For example, to
+	execute the current file when editing a Fennel script: >
+		:FnlFile %
+<
+
+:[range]FnlDo {body}					*:FnlDo*
+	Fennel analog of `:luado`.
+	Executes the Fennel function "(fn [line linenr] {body})" for each line
+	in [range], with the text of each line passed without the trailing
+	<EOL>. If the return value of the function is text, it will be set as
+	the new contents of that line.
+
+
+INIT.FNL						*fennel-init*
+
+	When *init.fnl* is found within a config dir (see `stdpath()`), it
+	will be automatically sourced. This can be disabled by setting
+	`g:fennel_auto_init` to false. See |fennel-config|.
+
+CONFIGURATION 						*fennel-config*
+
+SETTINGS 						*fennel-variables*
+
+*g:fennel_nvim_auto_init*
+	If set to false, will prevent fennel-nvim from auto-sourcing
+	`init.fnl`. See |fennel-init|.
+
+*g:fennel_nvim_init_patch_searchers*
+	When set to true, `fennel.searcher` will be added to `package.loaders`
+	in neovim's luajit environment (see |lua-require|). This will allow
+	calls to `require` from Lua to also load and run any available Fennel
+	modules.
+
+FENNEL PATHS 						*fennel-paths*
+RUNTIMEPATH						*fennel-runtimepath*
+	The same way neovim automatically updates `package.path` with values
+	from `runtimepath`, fennel-nvim will check for changes to
+	`package.path` and update `fennel.path` with transformed equivalents.
+	Paths ending in `.lua` will be translated to `.fnl`
+	`lua/?.lua` to `fnl/?.fnl`, and `lua/?/init.lua` to `fnl/?/init.fnl`.
+
+vim:tw=78:nosta:noet:ts=8:sts=0:ft=help:norl:fen:fdm=marker:
