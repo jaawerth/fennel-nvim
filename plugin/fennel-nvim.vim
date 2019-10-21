@@ -10,7 +10,7 @@ if !exists('g:fennel_nvim_auto_init')
   let g:fennel_nvim_auto_init = v:true
 endif
 
-if g:fennel_nvim_auto_init
+if has('nvim') && g:fennel_nvim_auto_init
   let s:configs = [stdpath('config')] + stdpath('config_dirs')
   for dir in s:configs
     let s:initFnl = dir . "/init.fnl"

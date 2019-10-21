@@ -11,7 +11,7 @@ function! fnl#eval(code, ...)
 endfunction
 
 function! fnl#dofile(file, ...)
-  let l:compileOpts = a:0 > 1 ? a:1 : {}
+  let l:compileOpts = a:0 > 1 ? a:1 : v:null
   let l:opts = {'file': a:file, 'opts': l:compileOpts}
   return luaeval('require("fennel-nvim").vimdofile(_A.file, _A.opts)', opts)
 endfunction

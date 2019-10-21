@@ -44,7 +44,7 @@ local function fnlEval(code, args, options)
 end
 local function fnlDoFile(file, opts)
   _updateFennelPaths()
-  return fennel.dofile(file, inherit(opts or {}, defaults.dofile))
+  return fennel.dofile(file, inherit(opts or defaults.dofile))
 end
 local function fnlDo(expr, s, e)
   local func = fnlEval(string.format('(fn [line linenr] %s)', expr))
