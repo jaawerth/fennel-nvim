@@ -1,6 +1,6 @@
 local fennel = require('fennel')
 local view = require('fennelview')
-
+local isNvim = vim.api and vim.api.nvim_get_var ~= nil
 local function inherit(t, index, metatable)
   local mt = type(metatable) == "table" and metatable or {}
   mt.__index = index or {}
@@ -47,10 +47,10 @@ local function fnlDoFile(file, opts)
   return fennel.dofile(file, inherit(opts or {}, defaults.dofile))
 end
 local function fnlDo(expr, s, e)
-  local code = string.format('(fn [line linenr] %s)', expr)
-  local func = fnlEval(code)
-  local lines = vim.api.nvim_buf_get_lines('.', s, e, true)
-  for i, l in ipairs(lines) do func(l, i + s) end
+  local func = fnlEval(string.format('(fn [line linenr] %s)', expr))
+  local lines = isNvim and vim.api.nvim_buf_get_lines('.', s - 1, e, true) or vim.buffer()
+  local lineOffset = isNvim and 1 - s or 0
+  for i = s, e do func(lines[i + lineOffset], i) end
 end
 
 local module = {
@@ -77,15 +77,6 @@ local module = {
     end
     if not found then
       table.insert(package.loaders or package.searchers, fennel.searcher)
-    end
-  end,
-  autoInit = function(val)
-    if val then
-      vim.api.nvim_set_var('fennel_nvim_auto_init', val)
-      return val
-    else
-      local ok, ret = pcall(vim.api.nvim_get_var, 'fennel_nvim_auto_init')
-      if ok then return ret else return nil end
     end
   end,
   syncFennelPath = true,

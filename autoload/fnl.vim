@@ -21,6 +21,6 @@ function! fnl#version()
 endfunction
 
 function! fnl#do(expr) range
-  call luaeval('require("fennel-nvim").dolines(_A.expr, _A.s - 1, _A.e)',
+  call luaeval('require("fennel-nvim").dolines(_A.expr, _A.s, _A.e)',
         \ {'expr': a:expr, 's': a:firstline, 'e': a:lastline})
 endfunction
