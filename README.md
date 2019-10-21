@@ -1,6 +1,6 @@
 # fennel-nvim [WIP]
 
-**Experimental** plugin adding native [fennel](https://fennel-lang.org) support to nvim by utilizing neovim's native lua support. No RPC necessary!
+**Experimental** plugin adding native [fennel](https://fennel-lang.org) support to nvim by utilizing neovim's native Lua support. No RPC necessary!
 
 I will likely extend this in the future, but for now I'm just testing out the idea. It should be possible reach seamless integration with a little extra work.
 
@@ -16,7 +16,7 @@ In the future, I will switch this over to only bundling a full release, and allo
 - [Usage](#usage)
   - [init.fnl](#initfnl)
   - [Commands](#commands)
-- [Configuration + Lua/Fennel API](#configuration-and-usage-from-lua)
+- [Configuration + Lua/Fennel API](#configuration)
   - [Automatic package.path --> fennel.path sync](#automatic-packagepath----fennelpath-sync)
 
 ## Install
@@ -50,14 +50,6 @@ You can disable this behavior as follows in your `init.vim`:
 
 ```viml
 let g:fennel_nvim_auto_init = v:false
-```
-
-The setting can also be read and changed from Lua:
-
-```lua
-require('fennel-nvim').autoInit(false) -- disable
-require('fennel-nvim').autoInit(true) -- enable
-require('fennel-nvim').autoInit() -- get value
 ```
 
 ### Commands
@@ -110,8 +102,22 @@ Can be invoked as a range function with `<range>call fnl#do(exprStr)` (see `:hel
 
 Also available from Lua: `require('fennel-nvim').dolines(exprStr, firstline, lastline)`
 
-## Configuration and usage from Lua
+## Configuration
 
+### Disable automatic patching of package.loaders
+
+To make `require` correctly find Fennel modules using `fennel.path`, `package.loaders` (or `package.searchers` in Lua 5.3 environments)
+is patched to include `fennel.searcher`. This also makes it possible to require Fennel modules from Lua (it will first look for a Lua
+module of the same name when requiring from Lua).
+
+This is automatic, but can be disabled by setting `g:fennel_nvim_patch_searchers` to 0 or `v:false` before any Fennel is invoked.
+
+From `init.vim`:
+```viml
+let g:fennel_nvim_patch_searchers = v:false
+```
+
+## Lua API
 **TODO:** Further document this API
 The [fennel-nvim](lua/fennel-nvim.lua) Lua module offers an API you can use to eval/load/compile Lua.
 
@@ -137,4 +143,3 @@ local fnlNvim = require('fennel-nvim')
 fnlNvim.syncFennelPath = false -- disabling syncing
 fnlNvim.resetFennelPath() -- restore to state before sync
 ```
-
