@@ -21,10 +21,10 @@ In the future, I will switch this over to only bundling a full release, and allo
 
 ## Install
 
-The usual, either copy to your nvim config dir or use vim-plug or your plugin manager of choice e.g.
+The usual, either clone this repository to the plugin directory (or in nvim, somewhere on your `runtimepath`) or a plugin manager of your choice.
 
 ```viml
-Plug 'jaawerth/fennel-nvim'
+Plug 'jaawerth/fennel-nvim' " using vim-plug
 ```
 
 ## Fennel Environment
@@ -43,7 +43,7 @@ For the Lua API to manipulate neovim from Lua/Fennel, see `:help lua-vim`, `:hel
 
 ### `init.fnl`
 
-This plugin, when installed on your `runtimepath`, will automatically look for an `init.fnl` file in your
+See `:help init.fnl`. This plugin, when installed on your `runtimepath`, will automatically look for an `init.fnl` file in your
 neovim configuration directories (see `:help xdg` and `:help stdpath`). On Linux, this defaults to `$HOME/.config/nvim/`.
 
 You can disable this behavior as follows in your `init.vim`:
