@@ -17,10 +17,25 @@ function! fnl#dofile(file, ...)
 endfunction
 
 function! fnl#version()
-  return luaeval('require("fennel-nvim").version')
+  return luaeval('require("fennel-nvim").fennel.version')
 endfunction
 
 function! fnl#do(expr) range
   call luaeval('require("fennel-nvim").dolines(_A.expr, _A.s, _A.e)',
         \ {'expr': a:expr, 's': a:firstline, 'e': a:lastline})
 endfunction
+
+function! fnl#omniComplete(findstart, base)
+  return fnl#eval('((. (require :fennel-nvim.complete) :omnifunc) _A.start _A.input)',
+        \ {'start': a:findstart, 'input': a:base})
+endfunction
+
+function! fnl#omniLocal(...)
+  if a:0 == 0 | return &omnifunc == 'fnl#omniComplete' | endif
+  if a:1
+    setlocal omnifunc=fnl#omniComplete
+  else
+    setlocal omnifunc=
+  endif
+endfunction
+

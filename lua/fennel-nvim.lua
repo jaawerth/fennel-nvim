@@ -54,7 +54,7 @@ local function fnlDo(expr, s, e)
 end
 
 local module = {
-  version = fennel.version,
+  fennel = fennel,
   defaults = defaults,
   inherit = inherit,
 
