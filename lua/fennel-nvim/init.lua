@@ -1,5 +1,5 @@
-local fennel = require('fennel')
-local view = require('fennelview')
+local fennel = require('fennel-nvim.lib.fennel')
+local view = require('fennel-nvim.lib.fennelview')
 local isNvim = vim.api and vim.api.nvim_get_var ~= nil
 local function inherit(t, index, metatable)
   local mt = type(metatable) == "table" and metatable or {}
