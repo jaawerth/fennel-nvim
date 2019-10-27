@@ -1,17 +1,22 @@
 (local fennel (. (require :fennel-nvim) :fennel))
 
 (fn *get-specials [env]
-  (local args (if env [{: env}] []))
-  (fennel.eval
-    "(macro list-specials {}
-       (local specials {})
-       (each [k (pairs _SPECIALS)] (tset specials k true)) specials)
-     (list-specials)" (unpack args)))
-
+  (fennel.eval "(macro list-specials {}
+                  (local specials {})
+                  (each [k (pairs _SPECIALS)] (tset specials k true)) specials)
+                (list-specials)"
+               (unpack (if env [{: env}] []))))
 (local specials (*get-specials))
-(fn complete [text limit]
-  (local text (if (= "(" (text:sub 1 1)) (text:sub 2) text))
-  (local limit (or limit 200))
+
+(var *limit* 400)
+(fn set-limit [n] "Sets default matches limit to n. Pass math.huge or (/ 1 0) for no limit"
+  (assert (-> (type n) (= :number)) "n must be a number.")
+  (set *limit* n))
+
+(fn complete [text limit lua-only?]
+  "Match supplied text against all globals and (unless disabled) Fennel specials/macros.
+  Default limit is 400 but can be changed with set-limit."
+  (local limit (or limit *limit*))
   (local matches [])
   (fn add-partials [input tbl prefix]
     (var key (next tbl))
@@ -23,28 +28,32 @@
   (fn add-matches [input tbl prefix]
     (local prefix (if prefix (.. prefix :.) ""))
     (if (string.find input "%.")
-      (let [(head tail) (string.match input "^([^.]+)%.(.*)")
+      (let [(head tail) (input:match "^([^.]+)%.(.*)")
             tbl-head (. tbl head)]
         (when (= :table (type tbl-head))
           (add-matches tail tbl-head (.. prefix head))))
       (add-partials input tbl prefix)))
-  (add-matches text specials)
+
+  (when (not lua-only?) (add-matches text specials))
   (add-matches text (or _G {}))
   matches)
 
 (fn find-start []
+  "Used by (n)vim omnifunc. Uses cursor position to find completion starting
+  point, returning (values start text-to-match)."
   (local [row col] (vim.api.nvim_win_get_cursor 0))
   (local [line] (vim.api.nvim_buf_get_lines :. (- row 1) row true))
-  (assert (= :string (type line)) "line should be string")
   (var [i found] [col nil])
   (while (and (not found) (> i 0))
     (if (string.find (line:sub i i) "[()%s%#]")
       (set found true)
       (set i (- i 1))))
-  (if (>= i 0) (values i (line:sub i col))
-    i))
+  (if (>= i 0) (values i (line:sub (+ i 1) col)) i))
 
-{:omnifunc (fn [fs input]
-             (local input (match input "" (select 2 (find-start)) _ input))
-             (if (= 1 fs) (find-start) (complete input)))
- :get-specials *get-specials : complete : find-start}
+(fn omnifunc [fs input lua-only?]
+  "Wrapped by viml to set 'omnifunc'. See (n)vim `:help complete-functions`"
+  (if (= 1 fs) (find-start)
+    (complete (if (not= "" input) input (select 2 (find-start)))
+              lua-only?)))
+
+{: omnifunc : complete : find-start : set-limit :get-specials *get-specials}

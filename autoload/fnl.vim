@@ -30,12 +30,7 @@ function! fnl#omniComplete(findstart, base)
         \ {'start': a:findstart, 'input': a:base})
 endfunction
 
-function! fnl#omniLocal(...)
-  if a:0 == 0 | return &omnifunc == 'fnl#omniComplete' | endif
-  if a:1
-    setlocal omnifunc=fnl#omniComplete
-  else
-    setlocal omnifunc=
-  endif
+function! fnl#omniCompleteLua(...)
+  return fnl#eval('((. (require :fennel-nvim.complete) :omnifunc) _A.start _A.input true)',
+        \ {'start': a:findstart, 'input': a:base})
 endfunction
-
