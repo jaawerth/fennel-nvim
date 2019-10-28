@@ -26,11 +26,11 @@ function! fnl#do(expr) range
 endfunction
 
 function! fnl#omniComplete(findstart, base)
-  return fnl#eval('((. (require :fennel-nvim.complete) :omnifunc) _A.start _A.input)',
+  return fnl#eval('((. (require :fennel-nvim.complete) :fnl-omnifunc) _A.start _A.input)',
         \ {'start': a:findstart, 'input': a:base})
 endfunction
 
-function! fnl#omniCompleteLua(...)
-  return fnl#eval('((. (require :fennel-nvim.complete) :omnifunc) _A.start _A.input true)',
+function! fnl#omniCompleteLua(findstart, base)
+  return fnl#eval('((. (require :fennel-nvim.complete) :lua-omnifunc) _A.start _A.input)',
         \ {'start': a:findstart, 'input': a:base})
 endfunction

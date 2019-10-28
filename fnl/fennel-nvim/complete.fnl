@@ -50,10 +50,12 @@
       (set i (- i 1))))
   (if (>= i 0) (values i (line:sub (+ i 1) col)) i))
 
-(fn omnifunc [fs input lua-only?]
-  "Wrapped by viml to set 'omnifunc'. See (n)vim `:help complete-functions`"
-  (if (= 1 fs) (find-start)
-    (complete (if (not= "" input) input (select 2 (find-start)))
-              lua-only?)))
+(fn gen-omnifunc [lua-only?]
+  "Generate an omnifunc to be used from viml. See `:h omnifunc` `:h complete-functions`"
+  (fn omnifunc [fs input] "Wrapped by viml to set 'omnifunc'. See `:help complete-functions`"
+    (if (= 1 fs) (find-start)
+      (-> (if (not= "" input) input (select 2 (find-start)))
+          (complete nil lua-only?)))))
 
-{: omnifunc : complete : find-start : set-limit :get-specials *get-specials}
+{: gen-omnifunc : complete : set-limit : find-start :fnl-omnifunc (gen-omnifunc)
+:lua-omnifunc (gen-omnifunc true) :get-specials *get-specials}
