@@ -17,9 +17,7 @@ In the future, I will switch this over to only bundling a full release, and allo
   - [init.fnl](#initfnl)
   - [Commands](#commands)
 - [Neovim Lua Completion](#completion)
-- [Configuration + Lua/Fennel API](#configuration)
-  - [Auto-sourcing init.fnl](#init.fnl)
-  - [Automatic package.path --> fennel.path sync](#automatic-packagepath----fennelpath-sync)
+- [Configuration](#configuration)
 
 ## Install
 
