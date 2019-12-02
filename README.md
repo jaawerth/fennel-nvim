@@ -16,7 +16,9 @@ In the future, I will switch this over to only bundling a full release, and allo
 - [Usage](#usage)
   - [init.fnl](#initfnl)
   - [Commands](#commands)
+- [Neovim Lua Completion](#completion)
 - [Configuration + Lua/Fennel API](#configuration)
+  - [Auto-sourcing init.fnl](#init.fnl)
   - [Automatic package.path --> fennel.path sync](#automatic-packagepath----fennelpath-sync)
 
 ## Install
@@ -102,7 +104,15 @@ Can be invoked as a range function with `<range>call fnl#do(exprStr)` (see `:hel
 
 Also available from Lua: `require('fennel-nvim').dolines(exprStr, firstline, lastline)`
 
+## Completion
+For convenience, this module comes with a couple of functions that can be used with `omnifunc`. See `:help fennel-completion`.
+Note that this will only complete on globals and specials/macros currently, using Neovim's internal Lua/Fennel environment.
+
 ## Configuration
+
+### `g:fennel_nvim_auto_init`
+
+See `:help g:fennel_nvim_auto_init` for disabling auto-source of `init.fnl`
 
 ### Disable automatic patching of package.loaders
 
