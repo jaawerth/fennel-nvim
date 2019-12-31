@@ -1,0 +1,1 @@
+../fnl/fennel-nvim/lib/fennelview.fnl

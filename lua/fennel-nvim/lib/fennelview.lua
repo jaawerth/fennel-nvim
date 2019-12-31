@@ -16,9 +16,9 @@ do
   long_control_char_escapes = long
 end
 local function escape(str)
-  local str = str:gsub("\\", "\\\\")
-  local str = str:gsub("(%c)%f[0-9]", long_control_char_escapes)
-  return str:gsub("%c", short_control_char_escapes)
+  local str0 = str:gsub("\\", "\\\\")
+  local str1 = str0:gsub("(%c)%f[0-9]", long_control_char_escapes)
+  return str1:gsub("%c", short_control_char_escapes)
 end
 require("fennel").metadata:setall(escape, "fnl/arglist", {"str"})
 local function sequence_key_3f(k, len)
@@ -189,20 +189,20 @@ local function one_line(str)
 end
 require("fennel").metadata:setall(one_line, "fnl/arglist", {"str"})
 local function fennelview(x, options)
-  local options = (options or {})
-  local inspector = inspector
+  local options0 = (options or {})
+  local inspector = nil
   local function _1_()
-    if options["one-line"] then
+    if options0["one-line"] then
       return ""
     else
       return "  "
     end
   end
-  inspector = {["detect-cycles?"] = not (false == options["detect-cycles?"]), ["max-ids"] = {}, appearances = count_table_appearances(x, {}), buffer = {}, depth = (options.depth or 128), ids = {}, indent = (options.indent or _1_()), level = 0}
+  inspector = {["detect-cycles?"] = not (false == options0["detect-cycles?"]), ["max-ids"] = {}, appearances = count_table_appearances(x, {}), buffer = {}, depth = (options0.depth or 128), ids = {}, indent = (options0.indent or _1_()), level = 0}
   put_value(inspector, x)
   do
     local str = table.concat(inspector.buffer)
-    if options["one-line"] then
+    if options0["one-line"] then
       return one_line(str)
     else
       return str

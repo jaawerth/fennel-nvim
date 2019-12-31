@@ -1,5 +1,5 @@
 *.swp
 .*.swp
+.exrc
 Session.vim
-
-doc/tags
+tags

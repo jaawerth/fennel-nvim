@@ -1,0 +1,1 @@
+../lua/fennel-nvim/lib/fennel.lua

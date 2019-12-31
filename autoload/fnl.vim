@@ -1,13 +1,19 @@
 if !exists('g:fennel_nvim_patch_searchers') || g:fennel_nvim_patch_searchers
-  lua require('fennel-nvim').patchSearchers()
+  lua require('fennel-nvim').patch_loaders()
 endif
 
 function! fnl#eval(code, ...)
   let l:args = {
         \ 'args': a:0 > 0 ? a:1 : v:null,
         \ 'code': a:code }
-  "let l:compileOpts = a:0 > 1 ? a:1 : {}
   return luaeval('require("fennel-nvim").vimeval(_A.code, _A.args)', l:args)
+endfunction
+
+function! fnl#unsafeEval(code, ...)
+  let l:args = {
+        \ 'args': a:0 > 0 ? a:1 : v:null,
+        \ 'code': a:code }
+  return luaeval('require("fennel-nvim").eval(_A.code, _A.args)', l:args)
 endfunction
 
 function! fnl#dofile(file, ...)

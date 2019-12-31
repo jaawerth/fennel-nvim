@@ -15,7 +15,7 @@
 
 (fn complete [text limit lua-only?]
   "Match supplied text against all globals and (unless disabled) Fennel specials/macros.
-  Default limit is 400 but can be changed with set-limit."
+Default limit is 400 but can be changed with set-limit."
   (local limit (or limit *limit*))
   (local matches [])
   (fn add-partials [input tbl prefix]
@@ -28,11 +28,11 @@
   (fn add-matches [input tbl prefix]
     (local prefix (if prefix (.. prefix :.) ""))
     (if (string.find input "%.")
-      (let [(head tail) (input:match "^([^.]+)%.(.*)")
-            tbl-head (. tbl head)]
-        (when (= :table (type tbl-head))
-          (add-matches tail tbl-head (.. prefix head))))
-      (add-partials input tbl prefix)))
+        (let [(head tail) (input:match "^([^.]+)%.(.*)")
+              tbl-head (. tbl head)]
+          (when (= :table (type tbl-head))
+            (add-matches tail tbl-head (.. prefix head))))
+        (add-partials input tbl prefix)))
 
   (when (not lua-only?) (add-matches text specials))
   (add-matches text (or _G {}))
@@ -40,22 +40,23 @@
 
 (fn find-start []
   "Used by (n)vim omnifunc. Uses cursor position to find completion starting
-  point, returning (values start text-to-match)."
+point, returning (values start text-to-match)."
   (local [row col] (vim.api.nvim_win_get_cursor 0))
-  (local [line] (vim.api.nvim_buf_get_lines :. (- row 1) row true))
+  (local [line]    (vim.api.nvim_buf_get_lines :. (- row 1) row true))
   (var [i found] [col nil])
   (while (and (not found) (> i 0))
     (if (string.find (line:sub i i) "[()%s%#]")
-      (set found true)
-      (set i (- i 1))))
+        (set found true)
+        (set i (- i 1))))
   (if (>= i 0) (values i (line:sub (+ i 1) col)) i))
 
 (fn gen-omnifunc [lua-only?]
   "Generate an omnifunc to be used from viml. See `:h omnifunc` `:h complete-functions`"
-  (fn omnifunc [fs input] "Wrapped by viml to set 'omnifunc'. See `:help complete-functions`"
+  (fn omnifunc [fs input]
+    "Wrapped by viml to set 'omnifunc'. See `:help complete-functions`"
     (if (= 1 fs) (find-start)
-      (-> (if (not= "" input) input (select 2 (find-start)))
-          (complete nil lua-only?)))))
+        (-> (if (not= "" input) input (select 2 (find-start)))
+            (complete nil lua-only?)))))
 
 {: gen-omnifunc : complete : set-limit : find-start :fnl-omnifunc (gen-omnifunc)
 :lua-omnifunc (gen-omnifunc true) :get-specials *get-specials}
