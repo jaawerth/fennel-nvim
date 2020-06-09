@@ -17,9 +17,10 @@
          long))
 
 (fn escape [str]
-  (let [str (: str :gsub "\\" "\\\\")
-        str (: str :gsub "(%c)%f[0-9]" long-control-char-escapes)]
-    (: str :gsub "%c" short-control-char-escapes)))
+  (-> str
+      (: :gsub "\\" "\\\\")
+      (: :gsub "(%c)%f[0-9]" long-control-char-escapes)
+      (: :gsub "%c" short-control-char-escapes)))
 
 (fn sequence-key? [k len]
   (and (= (type k) "number")
@@ -93,10 +94,11 @@
   (puts self "[")
   (set self.level (+ self.level 1))
   (for [i 1 len]
-    (puts self " ")
+    (when (< 1 i (+ 1 len))
+      (puts self " "))
     (put-value self (. t i)))
   (set self.level (- self.level 1))
-  (puts self " ]"))
+  (puts self "]"))
 
 (fn put-key [self k]
   (if (and (= (type k) "string")
@@ -124,24 +126,27 @@
   (puts self "}"))
 
 (fn put-table [self t]
-  (if (and (already-visited? self t) self.detect-cycles?)
-      (puts self "#<table " (get-id self t) ">")
-      (>= self.level self.depth)
-      (puts self "{...}")
-      :else
-      (let [(non-seq-keys len) (get-nonsequential-keys t)
-            id (get-id self t)]
-        ;; fancy metatable stuff can result in self.appearances not including a
-        ;; table, so if it's not found, assume we haven't seen it; we can't do
-        ;; cycle detection in that case.
-        (if (and (< 1 (or (. self.appearances t) 0)) self.detect-cycles?)
-            (puts self "#<table" id ">")
-            (and (= (length non-seq-keys) 0) (= (length t) 0))
-            (puts self "{}")
-            (= (length non-seq-keys) 0)
-            (put-sequential-table self t len)
-            :else
-            (put-kv-table self t non-seq-keys)))))
+  (let [metamethod (and self.metamethod? (-?> t getmetatable (. :__fennelview)))]
+    (if (and (already-visited? self t) self.detect-cycles?)
+        (puts self "#<table " (get-id self t) ">")
+        (>= self.level self.depth)
+        (puts self "{...}")
+        metamethod
+        (puts self (metamethod t self.fennelview))
+        :else
+        (let [(non-seq-keys len) (get-nonsequential-keys t)
+              id (get-id self t)]
+          ;; fancy metatable stuff can result in self.appearances not including
+          ;; a table, so if it's not found, assume we haven't seen it; we can't
+          ;; do cycle detection in that case.
+          (if (and (< 1 (or (. self.appearances t) 0)) self.detect-cycles?)
+              (puts self "#<table" id ">")
+              (and (= (length non-seq-keys) 0) (= (length t) 0))
+              (puts self "{}")
+              (= (length non-seq-keys) 0)
+              (put-sequential-table self t len)
+              :else
+              (put-kv-table self t non-seq-keys))))))
 
 (set put-value (fn [self v]
                  (let [tv (type v)]
@@ -166,13 +171,27 @@
     ret))
 
 (fn fennelview [x options]
-  "Return a string representation of x."
+  "Return a string representation of x.
+
+Can take an options table with these keys:
+* :one-line (boolean: default: false) keep the output string as a one-liner
+* :depth (number, default: 128) limit how many levels to go (default: 128)
+* :indent (string, default: \"  \") use this string to indent each level
+* :detect-cycles? (boolean, default: true) don't try to traverse a looping table
+* :metamethod? (boolean: default: true) use the __fennelview metamethod if found
+
+The __fennelview metamethod should take the table being serialized as its first
+argument and a function as its second arg which can be used on table elements to
+continue the fennelview process on them.
+"
   (let [options (or options {})
         inspector {:appearances (count-table-appearances x {})
                    :depth (or options.depth 128)
                    :level 0 :buffer {} :ids {} :max-ids {}
                    :indent (or options.indent (if options.one-line "" "  "))
-                   :detect-cycles? (not (= false options.detect-cycles?))}]
+                   :detect-cycles? (not (= false options.detect-cycles?))
+                   :metamethod? (not (= false options.metamethod?))
+                   :fennelview #(fennelview $1 options)}]
     (put-value inspector x)
     (let [str (table.concat inspector.buffer)]
       (if options.one-line (one-line str) str))))
