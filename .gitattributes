@@ -1,0 +1,8 @@
+# Use clojure syntax highlighting for .fnl until fennel is in linguist
+*.fnl linguist-language=clojure
+*.fnl -linguist-detectable
+
+# External/vendored deps checked into the repo
+lua/fennel-nvim/lib/fennel.lua linguist-vendored
+lua/fennel-nvim/lib/fennelview.lua linguist-vendored
+fnl/fennel-nvim/lib/fennelview.fnl linguist-vendored
